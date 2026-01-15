@@ -1,40 +1,50 @@
 
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import {Eye, SquarePen, Trash} from 'lucide-react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useGetFoods } from '@/utils/apis/foodApi'
 import { router } from 'expo-router'
+import MyButton from '../components/MyButton'
+import { useCreateOrder } from '@/utils/apis/orderApi'
+import { useGetProfile } from '@/utils/apis/userApi'
+import Toast from 'react-native-toast-message'
 
 const Home = () => {
+  const {data:profile} = useGetProfile();
   const {data:foods} = useGetFoods();
-  console.log(foods);
-  
+  const {mutate:createOrder} = useCreateOrder();
+  const isDarkMode = useColorScheme() === 'dark';
+  const onOrder = () => {
+    const data ={user:profile?.data?._id,food:foods?.data?._id}
+    createOrder(data,{
+      onSuccess: (response) => {
+        Toast.show({
+          type:"success",
+          text1:response.message
+        })
+      },
+      onError: () => Toast.show({type:'error',text1:'Oops! Something Went Wrong'})
+    })
+  }
   return (
-    <SafeAreaView>
-        <ScrollView className='p-5'>
-            <Text className='text-xl font-semibold'>All Foods</Text>
-            <TouchableOpacity className='bg-cyan-500 p-2.5 rounded-md w-24 mt-4' onPress={() => router.push("/add")}><Text className='text-white'>Add Food</Text></TouchableOpacity>
-            <View className='gap-3 mt-5'>
-                {foods?.data?.map((d:{_id:string,name:string,price:number,image:string}) => 
-                  <View key={d._id} className='p-5 gap-2 bg-white rounded-md'>
-                      <Text className='text-xl font-medium'>{d.name}</Text>
-                      <Text className='text-[18px]'>{d.price}</Text>
-                      <Image src={d.image} className='w-30 h-28 rounded-md'/>
-                      <View className='flex-row gap-2'>
-                        <TouchableOpacity className='bg-gray-500 p-2.5 rounded-md' activeOpacity={0.7}>
-                            <Text className='flex-row gap-2 items-center text-white'><Eye color="white" size={20}/>View</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className='bg-cyan-500 p-2.5 rounded-md' activeOpacity={0.7}>
-                          <Text className='text-white'><SquarePen color="white" size={20}/>Edit</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className='bg-red-500 p-2.5 rounded-md' activeOpacity={0.7}>
-                            <Text className='text-white'><Trash color="white" size={20} />Delete</Text>
-                        </TouchableOpacity>
-                      </View>
-                  </View>
-                )}
+    <SafeAreaView className={`${isDarkMode && 'bg-stone-800'} flex-1`}>
+        <View className='flex-1 gap-3 p-5'>
+            <Text className={`${isDarkMode && 'text-white'} text-2xl font-semibold`}>All Foods</Text>
+            {/* <MyButton title='Add Food' onPress={onAddFood}/> */}
+            <View className='mb-8'>
+                <FlatList 
+                data={foods?.data}
+                keyExtractor={item => item._id}
+                contentContainerClassName='gap-3'
+                renderItem={({item}) => <View  className={`${isDarkMode ? 'bg-stone-600':'bg-white'} p-5 gap-2 rounded-md`}>
+                      <Text className={`${isDarkMode && 'text-white'} text-xl font-medium`}>{item.name}</Text>
+                      <Text className={`${isDarkMode ? 'text-stone-300' : 'text-stone-500'} text-[18px]`}>Rs. {item.price}</Text>
+                      <Image source={{uri:item.image}} className='w-30 h-40 rounded-md'/>
+                      <MyButton title='Order' onPress={onOrder}/>
+                  </View> }
+                />
             </View>
-        </ScrollView>
+        </View>
     </SafeAreaView>
   )
 }

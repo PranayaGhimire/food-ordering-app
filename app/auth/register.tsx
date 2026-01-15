@@ -18,7 +18,7 @@ const Register = () => {
     defaultValues: {
       fullName: "",
       username: "",
-      phoneNumber:"",
+      phoneNumber: "",
       email: "",
       password: "",
       role: "USER",
@@ -99,7 +99,7 @@ const Register = () => {
             <Text className="text-red-500">{errors.username.message}</Text>
           )}
         </View>
-         <View className="gap-2">
+        <View className="gap-2">
           <Text className={`${isDarkMode && "text-white"} text-xl font-medium`}>
             Phone Number
           </Text>
