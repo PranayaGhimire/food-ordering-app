@@ -11,7 +11,7 @@ const Home = () => {
   };
   return (
     <SafeAreaView
-      className={`${isDarkMode && "bg-stone-900"} flex-1 items-center justify-around p-5 gap-6`}
+      className={`${isDarkMode && "bg-stone-800"} flex-1 items-center justify-around p-5 gap-6`}
     >
       <View className=" items-center gap-7">
         <Text
