@@ -13,15 +13,16 @@ import { useGetProfile } from "@/utils/apis/userApi";
 import { useGetFoods } from "@/utils/apis/foodApi";
 import { useCreateOrder } from "@/utils/apis/orderApi";
 import MyButton from "../components/MyButton";
-import { CircleCheckBig, X } from "lucide-react-native";
+import { CircleCheckBig, UtensilsCrossed, X } from "lucide-react-native";
 
 const Menus = () => {
   const isDarkMode = useColorScheme() === "dark";
   const { data: profile } = useGetProfile();
   const { data: foods } = useGetFoods();
   const { mutate: createOrder } = useCreateOrder();
-  const onOrder = () => {
-    const data = { user: profile?.data?._id, food: foods?.data?._id };
+  const onOrder = (foodId:string,foodName:string,isAvailable:boolean) => {
+    const data = { user: profile?.data?._id, food: foodId };
+   if (isAvailable) 
     createOrder(data, {
       onSuccess: (response) => {
         Toast.show({
@@ -31,7 +32,9 @@ const Menus = () => {
       },
       onError: () =>
         Toast.show({ type: "error", text1: "Oops! Something Went Wrong" }),
-    });
+    }); 
+    else 
+        Toast.show({type:'error',text1:`Sorry sir`,text2:` ${foodName} is not available at this moment`})
   };
   return (
     <SafeAreaView
@@ -70,9 +73,9 @@ const Menus = () => {
               </Text>
               <Image
                 source={{ uri: item.image }}
-                className="w-30 h-40 rounded-md"
+                className="w-30 h-52 rounded-md"
               />
-              <MyButton title="Order" onPress={onOrder} />
+              <MyButton title="Order" onPress={() => onOrder(item._id,item.name,item.isAvailable)} icon={UtensilsCrossed} />
             </View>
           )}
         />
