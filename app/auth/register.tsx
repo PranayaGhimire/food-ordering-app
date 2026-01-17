@@ -182,7 +182,7 @@ const Register = () => {
             name="role"
             render={({ field: { onChange, value } }) => (
               <View className="bg-white rounded-md p-0">
-                {" "}
+                <Text>{" "}</Text>
                 <Picker
                   selectedValue={value}
                   onValueChange={onChange}
@@ -202,10 +202,10 @@ const Register = () => {
         </View>
         <MyButton title="Register" onPress={handleSubmit(onRegister)} />
         <Text className={`${isDarkMode && "text-white"} text-[18px]`}>
-          Already a user ?{" "}
+          Already a user ?<Text>{" "}</Text> 
           <Link href={`/auth/login`} className="font-semibold">
             Sign In
-          </Link>{" "}
+          </Link><Text>{" "}</Text>
           Here
         </Text>
       </View>

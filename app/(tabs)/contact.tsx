@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-
-const contact = () => {
+import { StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
+const Contact = () => {
+  const isDarKMode = useColorScheme() === 'dark';
   return (
-    <View>
-      <Text>contact</Text>
-    </View>
+    <SafeAreaView className={`${isDarKMode && 'bg-stone-800'} flex-1 p-5`}>
+      <Text className={`${isDarKMode && 'text-white'} text-xl font-semibold`}>Contact Us</Text>
+    </SafeAreaView>
   )
 }
 
-export default contact
+export default Contact
 
 const styles = StyleSheet.create({})

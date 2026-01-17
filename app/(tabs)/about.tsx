@@ -1,15 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const about = () => {
+const About = () => {
+  const isDarkMode = useColorScheme() === 'dark';
   return (
-    <SafeAreaView>
-      <Text>about</Text>
+    <SafeAreaView className={`${isDarkMode && 'bg-stone-800'} flex-1 p-5`}>
+      <Text className={`${isDarkMode && 'text-white'} text-xl font-semibold`}>About Us</Text>
     </SafeAreaView>
   )
 }
 
-export default about
+export default About
 
 const styles = StyleSheet.create({})
